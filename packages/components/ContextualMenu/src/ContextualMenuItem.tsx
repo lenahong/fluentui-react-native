@@ -21,6 +21,7 @@ export const ContextualMenuItem = compose<ContextualMenuItemType>({
       accessibilityLabel = userProps.text,
       onClick,
       testID,
+      disabled,
       ...rest
     } = userProps;
 
@@ -29,15 +30,17 @@ export const ContextualMenuItem = compose<ContextualMenuItemType>({
 
     const onItemClick = React.useCallback(
       e => {
-        context?.onDismissMenu();
-        if (onClick) {
-          onClick();
+        if (!disabled) {
+          context ?.onDismissMenu();
+          if (onClick) {
+            onClick();
+          }
+          else {
+            context.onItemClick && context.onItemClick(itemKey);
+          }
+          e.stopPropagation();
         }
-        else {
-          context.onItemClick && context.onItemClick(itemKey);
-        }
-        e.stopPropagation();
-      }, [context, itemKey, onClick]
+      }, [context, itemKey, onClick, disabled]
     );
 
     const onKeyUp = React.useCallback(
@@ -45,7 +48,7 @@ export const ContextualMenuItem = compose<ContextualMenuItemType>({
         if (e.nativeEvent.key === 'Enter' || e.nativeEvent.key === ' ') {
           onItemClick(e);
         }
-      }, [onItemClick]);
+      }, [onItemClick,]);
 
     // attach the pressable state handlers
     const pressable = useAsPressable({ ...rest, onPress: onItemClick });
