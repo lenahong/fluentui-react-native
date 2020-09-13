@@ -7,11 +7,27 @@ import { IFocusable, IPressableState, IWithPressableOptions } from '@fluentui-re
 
 export const linkName = 'RNFLink';
 
+export type Cursor =
+  | 'auto'
+  | 'default'
+  | 'pointer'
+  | 'help'
+  | 'not-allowed'
+  | 'wait'
+  | 'move'
+  | 'nesw-resize'
+  | 'ns-resize'
+  | 'nwse-resize'
+  | 'we-resize'
+  | 'text'
+
 /**
  * Properties for fabric native Link
  */
 
-export type ILinkTokens = IForegroundColorTokens & FontTokens & IBorderTokens;
+export interface ILinkTokens extends IForegroundColorTokens, FontTokens, IBorderTokens {
+  cursor?: Cursor;
+}
 
 /**
  * Because style state updates are coming from the touchable and will cause a child render the link doesn't use

@@ -10,6 +10,7 @@ export const settings: IComposeSettings<ILinkType> = [
       borderColor: 'transparent',
       borderStyle: 'dotted',
       borderWidth: 1,
+      cursor: 'pointer',
     },
     root: {
       accessible: true,
@@ -19,7 +20,7 @@ export const settings: IComposeSettings<ILinkType> = [
         margin: 0,
         textDecorationLine: 'underline',
         display: 'flex',
-        alignItems: 'flex-start',
+        alignSelf: 'flex-start',
       } as IViewProps['style']
     },
     content: {

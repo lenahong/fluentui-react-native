@@ -72,8 +72,15 @@ export const Link = compose<ILinkType>({
 
     // create the merged slot props
     const slotProps = mergeSettings<ILinkSlotProps>(styleProps, {
-      root: { ...linkProps, ref: linkRef, onAccessibilityTap: onAccTap },
-      content: { children: content }
+      root: {
+        ...linkProps,
+        ref: linkRef,
+        onAccessibilityTap: onAccTap,
+        cursor: 'pointer'
+      },
+      content: {
+        children: content,
+      }
     });
 
     return { slotProps, state: { ...linkState, ...info } };
@@ -95,8 +102,14 @@ export const Link = compose<ILinkType>({
     content: Text
   },
   styles: {
-    root: [],
-    content: [foregroundColorTokens, textTokens, borderTokens]
+    root: [
+      borderTokens,
+      { source: 'cursor' }
+    ],
+    content: [
+      foregroundColorTokens,
+      textTokens,
+    ]
   }
 });
 
