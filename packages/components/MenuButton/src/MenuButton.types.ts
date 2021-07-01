@@ -1,4 +1,5 @@
-import { ICalloutProps, ICalloutTokens } from '@fluentui-react-native/callout';
+import { ContextualMenuItemProps, ContextualMenuProps } from '@fluentui-react-native/contextual-menu';
+import { IButtonProps } from '@fluentui-react-native/button';
 import { ViewProps } from 'react-native';
 import { IRenderData } from '@uifabricshared/foundation-composable';
 
@@ -6,7 +7,7 @@ export const MenuButtonName = 'MenuButton';
 
 export interface MenuButtonContext {
   /*
-   ** The currently selected ContextualMenu's key
+   ** The currently selected MenuButton's key
    */
   selectedKey: string | null;
 
@@ -23,50 +24,34 @@ export interface MenuButtonContext {
    */
   isSubmenuOpen?: boolean;
   /*
-   ** ContextualMenuItems will call this submenu dismissal when they are hovered
+   ** MenuButtonItems will call this submenu dismissal when they are hovered
    */
   dismissSubmenu?: () => void;
 }
 
-export interface ContextualMenuState {
+export interface MenuButtonState {
   context: MenuButtonContext;
 }
 
-export type ContextualMenuTokens = ICalloutTokens;
-/**
- * Properties and Tokens for FluentUI React Native ContextualMenu
- */
-
-export interface ContextualMenuProps extends Omit<ICalloutProps, 'setInitialFocus'> {
-  /*
-   * Whether to set initial focus on the contextual menu container, as opposed to the first menu item.
-   */
-  shouldFocusOnContainer?: boolean;
-
-  /*
-   * Whether to focus on the menu when mounted
-   */
-  shouldFocusOnMount?: boolean;
+export interface MenuButtonProps {
+  menuItems?: ContextualMenuItemProps;
+  content?: string;
   /*
    ** Callback for when menu item is clicked
    */
   onItemClick?: (key: string) => void;
-  /*
-   ** Callback to toggle showContextualMenu to false and close menu on item click
-   */
-  setShowMenu?: (showMenu: boolean) => void;
 }
 
-export type ContextualMenuSlotProps = {
-  root: ContextualMenuProps;
-  container: ViewProps;
+export type MenuButtonSlotProps = {
+  root: React.PropsWithChildren<MenuButtonProps>;
+  button: IButtonProps;
+  contextualMenu: ContextualMenuProps;
 };
 
-export type ContextualMenuRenderData = IRenderData<ContextualMenuSlotProps, ContextualMenuState>;
+export type MenuButtonRenderData = IRenderData<MenuButtonSlotProps, MenuButtonState>;
 
-export interface ContextualMenuType {
-  props: ContextualMenuProps;
-  slotProps: ContextualMenuSlotProps;
-  tokens: ContextualMenuTokens;
-  state: ContextualMenuState;
+export interface MenuButtonType {
+  props: MenuButtonProps;
+  slotProps: MenuButtonSlotProps;
+  state: MenuButtonState;
 }
