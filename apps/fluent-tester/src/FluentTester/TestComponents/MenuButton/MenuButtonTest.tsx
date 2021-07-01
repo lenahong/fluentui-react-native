@@ -46,18 +46,15 @@ const contextualMenu: React.FunctionComponent<{}> = () => {
     {
       itemKey: '1',
       text: 'MenuItem 1',
-      icon: {testImage},
-      onItemClick: onItemClick
+      icon: {testImage}
     },
     {
       itemKey: '2',
-      text: 'MenuItem 2',
-      onItemClick: onItemClick
+      text: 'MenuItem 2'
     },
     {
       itemKey: '3',
       text: 'MenuItem 3',
-      onItemClick: onItemClick,
       disabled: true
     }
   ]
@@ -92,7 +89,7 @@ const contextualMenu: React.FunctionComponent<{}> = () => {
               <Text style={{ color: 'blue' }}>none</Text>
             )}
           </Text>
-          <MenuButton content="My new test button" menuItems={menuItems} />
+          <MenuButton content="My test button with types" menuItems={menuItems} onItemClick={onItemClick} />
         </View>
       </View>
     </View>

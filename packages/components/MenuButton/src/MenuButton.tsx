@@ -1,20 +1,17 @@
 import React, {useRef, useState, useCallback} from 'react';
 import { Button, ContextualMenu, ContextualMenuItem } from '@fluentui/react-native';
 
-interface IMenuButton {
-  content: string;
-  menuItems: IMenuItems[];
-}
+import {
+  // MenuButtonName,
+  MenuButtonProps,
+  // MenuButtonSlotProps,
+  // MenuButtonType,
+  // MenuButtonRenderData,
+  // MenuButtonContext,
+  // MenuButtonState,
+} from './MenuButton.types';
 
-interface IMenuItems {
-  itemKey: string;
-  text: string;
-  icon?: any;
-  onItemClick?: any;
-  disabled?: boolean;
-}
-
-export const MenuButton = (props: IMenuButton) => {
+export const MenuButton = (props: MenuButtonProps) => {
   const stdBtnRef = useRef(null);
 
   const content = props.content || ''
@@ -48,6 +45,7 @@ export const MenuButton = (props: IMenuButton) => {
           accessibilityLabel="Standard ContextualMenu"
           onDismiss={onDismissContextualMenu}
           setShowMenu={toggleShowContextualMenu}
+          onItemClick={props.onItemClick}
         >
           {
             menuItems.map((menuItem) => {
@@ -56,7 +54,6 @@ export const MenuButton = (props: IMenuButton) => {
                         text={menuItem.text}
                         itemKey={menuItem.itemKey}
                         icon={menuItem.icon}
-                        onClick={menuItem.onItemClick}
                         disabled={menuItem.disabled}
                       />
             })

@@ -1,6 +1,5 @@
 import { ContextualMenuItemProps, ContextualMenuProps } from '@fluentui-react-native/contextual-menu';
 import { IButtonProps } from '@fluentui-react-native/button';
-import { ViewProps } from 'react-native';
 import { IRenderData } from '@uifabricshared/foundation-composable';
 
 export const MenuButtonName = 'MenuButton';
@@ -34,7 +33,7 @@ export interface MenuButtonState {
 }
 
 export interface MenuButtonProps {
-  menuItems?: ContextualMenuItemProps;
+  menuItems?: ContextualMenuItemProps[];
   content?: string;
   /*
    ** Callback for when menu item is clicked
