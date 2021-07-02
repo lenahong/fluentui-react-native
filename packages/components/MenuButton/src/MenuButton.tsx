@@ -1,5 +1,5 @@
 import React, {useRef, useState, useCallback} from 'react';
-import { Button, ContextualMenu, ContextualMenuItem } from '@fluentui/react-native';
+import { Button, ContextualMenu, ContextualMenuItem, SubmenuItem, Submenu } from '@fluentui/react-native';
 // import { IUseComposeStyling, compose } from '@uifabricshared/foundation-compose';
 // import { useSelectedKey } from '@fluentui-react-native/interactive-hooks';
 // import { mergeSettings } from '@uifabricshared/foundation-settings';
@@ -16,18 +16,7 @@ import {
   // MenuButtonContext,
   // MenuButtonState,
   // MenuButtonRenderData,
-  // MenuButtonContext,
 } from './MenuButton.types';
-
-// export const CMContext = React.createContext<MenuButtonContext>({
-//   selectedKey: null,
-//   onItemClick: (/* key: string */) => {
-//     return;
-//   },
-//   onDismissMenu: () => {
-//     return;
-//   },
-// });
 
 // export const MenuButton1 = compose<MenuButtonType>({
   // displayName: MenuButtonName,
@@ -83,18 +72,17 @@ import {
   //     return null;
   //   }
   //   return (
-  //     <CMContext.Provider value={renderData.state.context}>
-  //       <Slots.root>
-  //         <Slots.button></Slots.button>
-  //         <Slots.contextualMenu></Slots.contextualMenu>
-  //       </Slots.root>
-  //     </CMContext.Provider>
+      // <Slots.root>
+      //   <Slots.button></Slots.button>
+      //   <Slots.contextualMenu></Slots.contextualMenu>
+      // </Slots.root>
   //   );
   // },
 // });
 
 export const MenuButton = (props: MenuButtonProps) => {
   const stdBtnRef = useRef(null);
+  const stdMenuItemRef = React.useRef(null);
 
   const content = props.content || ''
   const menuItems = props.menuItems || []
@@ -118,6 +106,32 @@ export const MenuButton = (props: MenuButtonProps) => {
     // setIsContextualMenuVisible(false);
   }, [setShowContextualMenu]);
 
+  function renderContextualMenuItem(menuItem) {
+    return <ContextualMenuItem
+      key={menuItem.itemKey}
+      text={menuItem.text}
+      itemKey={menuItem.itemKey}
+      icon={menuItem.icon}
+      disabled={menuItem.disabled}
+    />
+  }
+
+  const [showSubmenu, setShowSubmenu] = React.useState(false);
+  const [isSubmenuVisible, setIsSubmenuVisible] = React.useState(false);
+
+  const toggleShowSubmenu = React.useCallback(() => {
+    setShowSubmenu(!showSubmenu);
+    setIsSubmenuVisible(!isSubmenuVisible);
+  }, [showSubmenu, isSubmenuVisible, setShowSubmenu, setIsSubmenuVisible]);
+
+  const onShowSubmenu = React.useCallback(() => {
+    setIsSubmenuVisible(true);
+  }, [setIsSubmenuVisible]);
+
+  const onDismissSubmenu = React.useCallback(() => {
+    setShowSubmenu(false);
+  }, [setShowSubmenu]);
+
   return (
     <>
       <Button content={content}  componentRef={stdBtnRef} onClick={toggleShowContextualMenu} />
@@ -130,14 +144,17 @@ export const MenuButton = (props: MenuButtonProps) => {
           onItemClick={props.onItemClick}
         >
           {
-            menuItems.map((menuItem) => {
-              return <ContextualMenuItem
-                        key={menuItem.itemKey}
-                        text={menuItem.text}
-                        itemKey={menuItem.itemKey}
-                        icon={menuItem.icon}
-                        disabled={menuItem.disabled}
-                      />
+            menuItems.map(menuItem => {
+              return menuItem.submenu?
+              <>
+                <SubmenuItem text={menuItem.text} itemKey={menuItem.itemKey} onHoverIn={toggleShowSubmenu} componentRef={stdMenuItemRef} />
+                {showSubmenu && (
+                  <Submenu target={stdMenuItemRef} onDismiss={onDismissSubmenu} onShow={onShowSubmenu} setShowMenu={toggleShowSubmenu}>
+                    {menuItem.submenuItems && menuItem.submenuItems.map && menuItem.submenuItems.map(submenuItem => renderContextualMenuItem(submenuItem))}
+                  </Submenu>
+                )}
+              </>
+              : renderContextualMenuItem(menuItem)
             })
           }
         </ContextualMenu>

@@ -32,12 +32,14 @@ export interface MenuButtonState {
   context: MenuButtonContext;
 }
 
+export interface MenuButtonItemProps extends ContextualMenuItemProps {
+  submenu?: boolean;
+  submenuItems?: ContextualMenuItemProps[];
+}
+
 export interface MenuButtonProps {
-  menuItems?: ContextualMenuItemProps[];
+  menuItems?: MenuButtonItemProps[];
   content?: string;
-  /*
-   ** Callback for when menu item is clicked
-   */
   onItemClick?: (key: string) => void;
 }
 
