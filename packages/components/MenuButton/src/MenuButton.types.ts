@@ -1,6 +1,7 @@
 import { ContextualMenuItemProps, ContextualMenuProps } from '@fluentui-react-native/contextual-menu';
 import { IButtonProps } from '@fluentui-react-native/button';
 import { IRenderData } from '@uifabricshared/foundation-composable';
+import { IconProps } from '@fluentui-react-native/icon';
 
 export const MenuButtonName = 'MenuButton';
 
@@ -41,6 +42,8 @@ export interface MenuButtonProps {
   menuItems?: MenuButtonItemProps[];
   content?: string;
   onItemClick?: (key: string) => void;
+  disabled?: boolean;
+  icon?: number | string | IconProps;
 }
 
 export type MenuButtonSlotProps = {

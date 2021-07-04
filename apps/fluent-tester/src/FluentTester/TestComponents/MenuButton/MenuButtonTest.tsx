@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import * as React from 'react';
 import { Text, View, Switch } from 'react-native';
-import { Separator, MenuButton } from '@fluentui/react-native';
+import { Separator, MenuButton, ContextualMenuItemProps } from '@fluentui/react-native';
 import { MENU_BUTTON_TESTPAGE } from './consts';
 import { Test, TestSection, PlatformStatus } from '../Test';
 import { SvgIconProps, FontIconProps } from '@fluentui-react-native/icon';
@@ -24,11 +24,11 @@ const menuButton: React.FunctionComponent<{}> = () => {
   );
   const testImage = require('../Button/icon_24x24.png');
 
-  const menuItems = [
+  const menuItems: ContextualMenuItemProps[] = [
     {
       itemKey: '1',
       text: 'MenuItem 1',
-      icon: {testImage}
+      icon: testImage
     },
     {
       itemKey: '2',
@@ -68,6 +68,8 @@ const menuButton: React.FunctionComponent<{}> = () => {
             )}
           </Text>
           <MenuButton content="Standard MenuButton" menuItems={menuItems} onItemClick={onItemClick} />
+          <Text>Disabled MenuButton</Text>
+          <MenuButton disabled content="Disabled MenuButton" menuItems={menuItems} />
         </View>
       </View>
     </View>
@@ -160,7 +162,7 @@ const nestedMenuButton: React.FunctionComponent<{}> = () => {
         <Separator vertical />
 
         <View style={{ flexDirection: 'column', paddingHorizontal: 5 }}>
-          <MenuButton content="Press for Nested MenuButton" menuItems={menuItems} />
+          <MenuButton icon={testImage} content="Press for Nested MenuButton" menuItems={menuItems} />
         </View>
       </View>
     </View>

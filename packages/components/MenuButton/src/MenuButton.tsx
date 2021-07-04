@@ -86,6 +86,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 
   const content = props.content || ''
   const menuItems = props.menuItems || []
+  const icon = props.icon || ''
 
   const [showContextualMenu, setShowContextualMenu] = useState(false);
   // const [focusOnMount, setShouldFocusOnMount] = React.useState(true);
@@ -134,7 +135,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 
   return (
     <>
-      <Button content={content}  componentRef={stdBtnRef} onClick={toggleShowContextualMenu} />
+      <Button content={content}  componentRef={stdBtnRef} onClick={toggleShowContextualMenu} disabled={props.disabled} icon={icon}/>
       {showContextualMenu && (
         <ContextualMenu
           target={stdBtnRef}
@@ -147,7 +148,7 @@ export const MenuButton = (props: MenuButtonProps) => {
             menuItems.map(menuItem => {
               return menuItem.submenu?
               <>
-                <SubmenuItem text={menuItem.text} itemKey={menuItem.itemKey} onHoverIn={toggleShowSubmenu} componentRef={stdMenuItemRef} />
+                <SubmenuItem {...menuItem} onHoverIn={toggleShowSubmenu} componentRef={stdMenuItemRef} />
                 {showSubmenu && (
                   <Submenu target={stdMenuItemRef} onDismiss={onDismissSubmenu} onShow={onShowSubmenu} setShowMenu={toggleShowSubmenu}>
                     {menuItem.submenuItems && menuItem.submenuItems.map && menuItem.submenuItems.map(submenuItem => renderContextualMenuItem(submenuItem))}
