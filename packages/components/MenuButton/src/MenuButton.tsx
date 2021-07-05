@@ -1,11 +1,9 @@
 /** @jsx withSlots */
-// import React, {useRef, useState, useCallback} from 'react';
-import * as React from 'react';
-import { Button } from '@fluentui/react-native';
-// import { Button, ContextualMenu, ContextualMenuItem, SubmenuItem, Submenu } from '@fluentui/react-native';
+/** @jsxFrag React.createFragment */
+import React, {useRef, useState, useCallback} from 'react';
+//SubmenuItem , Submenu
+import { Button, ContextualMenu, ContextualMenuItem } from '@fluentui/react-native';
 import { IUseComposeStyling, compose } from '@uifabricshared/foundation-compose';
-// import { compose } from '@uifabricshared/foundation-compose';
-// import { useSelectedKey } from '@fluentui-react-native/interactive-hooks';
 import { mergeSettings } from '@uifabricshared/foundation-settings';
 import { ISlots, withSlots } from '@uifabricshared/foundation-composable';
 import { View } from 'react-native';
@@ -16,7 +14,7 @@ import {
   MenuButtonSlotProps,
   MenuButtonType,
   MenuButtonRenderData,
-  // MenuButtonContext,
+  MenuButtonItemProps,
   MenuButtonState,
   // MenuButtonRenderData,
 } from './MenuButton.types';
@@ -26,62 +24,119 @@ export const MenuButton = compose<MenuButtonType>({
   usePrepareProps: (userProps: MenuButtonProps, useStyling: IUseComposeStyling<MenuButtonType>) => {
     const { menuItems, content, icon, disabled, onItemClick } = userProps;
 
-  //   const data = useSelectedKey(null, onItemClick);
+    const stdBtnRef = useRef(null);
+    const [showContextualMenu, setShowContextualMenu] = useState(false);
+    // const [showSubmenu, setShowSubmenu] = useState(false);
+    // const [isSubmenuVisible, setIsSubmenuVisible] = React.useState(false);
+    // const [focusOnMount, setShouldFocusOnMount] = React.useState(true);
+    // const toggleFocusOnMount = React.useCallback((value) => setShouldFocusOnMount(value), [setShouldFocusOnMount]);
+    // const [focusOnContainer, setShouldFocusOnContainer] = React.useState(false);
+    // const toggleFocusOnContainer = React.useCallback((value) => setShouldFocusOnContainer(value), [setShouldFocusOnContainer]);
+    // const data = useSelectedKey(null, onItemClick);
+
+    const onDismiss = useCallback(() => {
+      setShowContextualMenu(false);
+    }, [setShowContextualMenu]);
+
+  //   const onShowSubmenu = useCallback(() => {
+  //   setIsSubmenuVisible(true);
+  // }, [setIsSubmenuVisible]);
+
+  // const onDismissSubmenu = useCallback(() => {
+  //   setShowSubmenu(false);
+  // }, [setShowSubmenu]);
+
+  //   const toggleShowSubmenu = React.useCallback(() => {
+  //   setShowSubmenu(!showSubmenu);
+  //   setIsSubmenuVisible(!isSubmenuVisible);
+  // }, [showSubmenu, isSubmenuVisible, setShowSubmenu, setIsSubmenuVisible]);
 
   //   // const [containerFocus, setContainerFocus] = React.useState(true);
   //   // const toggleContainerFocus = React.useCallback(() => {
   //   //   setContainerFocus(false);
   //   // }, [setContainerFocus]);
 
+  const toggleShowContextualMenu = useCallback(() => {
+        setShowContextualMenu(!showContextualMenu);
+      }, [showContextualMenu, setShowContextualMenu]);
+
     const state: MenuButtonState = {
       context: {
-        selectedKey: '1'//data.selectedKey,
-  //       onItemClick: data.onKeySelect,
-  //       // onDismissMenu: dismissCallback,
+        showContextualMenu: !!showContextualMenu,
+        // selectedKey: data.selectedKey,
+        // onItemClick: data.onKeySelect,
+        // onDismissMenu: onDismiss,
+        // isSubmenuOpen: isSubmenuVisible,
+        // dismissSubmenu: onDismissSubmenu
       },
     };
 
     const styleProps = useStyling(userProps, (override: string) => state[override] || userProps[override]);
 
     const slotProps = mergeSettings<MenuButtonSlotProps>(styleProps, {
-      root: {
-        content,
-        menuItems,
-        onItemClick,
-        icon,
-        disabled
-      },
+      root: {},
       button: {
         content,
         disabled,
-        icon
+        icon,
+        componentRef: stdBtnRef,
+        onClick: toggleShowContextualMenu
       },
       contextualMenu: {
-  //       onItemClick
-      }
+        onItemClick,
+        target: stdBtnRef,
+        accessibilityLabel: 'MenuButton',
+        onDismiss,
+        setShowMenu: toggleShowContextualMenu
+      },
+      contextualMenuItems: {
+        menuItems
+      },
+      ContextualMenuItem
     });
 
     return { slotProps, state };
   },
-  // settings: settings,
   slots: {
-    root: View,
+    root: React.Fragment,
     button: { slotType: Button as React.ComponentType<object> },
-  //   contextualMenu: ContextualMenu
+    contextualMenu: { slotType: ContextualMenu as React.ComponentType<object> },
+    contextualMenuItems: View
   },
-  styles: {
-  //   root: [backgroundColorTokens, borderTokens],
-  //   button: [],
-  },
-  render: (Slots: ISlots<MenuButtonSlotProps>, renderData: MenuButtonRenderData, ...children: React.ReactNode[]) => {
-    if (renderData.state == undefined) {
+  styles: {},
+  render: (Slots: ISlots<MenuButtonSlotProps>, renderData: MenuButtonRenderData) => {
+    if (!(renderData.state && renderData.slotProps)) {
       return null;
     }
+    const context = renderData.state!.context;
+    const menuItems = renderData.slotProps!.contextualMenuItems && renderData.slotProps.contextualMenuItems.menuItems || [];
+    function renderContextualMenuItem(menuItem: MenuButtonItemProps) {
+      return <ContextualMenuItem {...menuItem} />
+    }
+
     return (
       <Slots.root>
-        {children}
-        <Slots.button></Slots.button>
-        {/* <Slots.contextualMenu></Slots.contextualMenu> */}
+        <Slots.button />
+        {
+          context.showContextualMenu && (
+            <Slots.contextualMenu>
+              {menuItems.map(menuItem => {
+                // const stdMenuItemRef = React.useRef(null);
+                return menuItem.submenu?
+                <Slots.contextualMenuItems>
+                  {renderContextualMenuItem(menuItem)}
+                  {/* <SubmenuItem {...menuItem} componentRef={stdMenuItemRef} /> */}
+                  {/* {showSubmenu && (
+                    <Submenu target={stdMenuItemRef} onDismiss={onDismissSubmenu} onShow={onShowSubmenu} setShowMenu={toggleShowSubmenu}>
+                      {menuItem.submenuItems && menuItem.submenuItems.map && menuItem.submenuItems.map(submenuItem => renderContextualMenuItem(submenuItem))}
+                    </Submenu>
+                  )} */}
+                </Slots.contextualMenuItems>
+                 : renderContextualMenuItem(menuItem)
+              })}
+            </Slots.contextualMenu>
+          )
+        }
       </Slots.root>
     );
   },
@@ -96,18 +151,18 @@ export const MenuButton = compose<MenuButtonType>({
 //   const icon = props.icon || ''
 
 //   const [showContextualMenu, setShowContextualMenu] = useState(false);
-//   // const [focusOnMount, setShouldFocusOnMount] = React.useState(true);
-//   // const toggleFocusOnMount = React.useCallback((value) => setShouldFocusOnMount(value), [setShouldFocusOnMount]);
-//   // const [focusOnContainer, setShouldFocusOnContainer] = React.useState(false);
-//   // const toggleFocusOnContainer = React.useCallback((value) => setShouldFocusOnContainer(value), [setShouldFocusOnContainer]);
+  // const [focusOnMount, setShouldFocusOnMount] = React.useState(true);
+  // const toggleFocusOnMount = React.useCallback((value) => setShouldFocusOnMount(value), [setShouldFocusOnMount]);
+  // const [focusOnContainer, setShouldFocusOnContainer] = React.useState(false);
+  // const toggleFocusOnContainer = React.useCallback((value) => setShouldFocusOnContainer(value), [setShouldFocusOnContainer]);
 
 //   const toggleShowContextualMenu = useCallback(() => {
 //     setShowContextualMenu(!showContextualMenu);
 //   }, [showContextualMenu, setShowContextualMenu]);
 
-//   // const onShowContextualMenu = React.useCallback(() => {
-//   //   setIsContextualMenuVisible(true);
-//   // }, [setIsContextualMenuVisible]);
+  // const onShowContextualMenu = React.useCallback(() => {
+  //   setIsContextualMenuVisible(true);
+  // }, [setIsContextualMenuVisible]);
 
 //   const onDismissContextualMenu = React.useCallback(() => {
 //     setShowContextualMenu(false);

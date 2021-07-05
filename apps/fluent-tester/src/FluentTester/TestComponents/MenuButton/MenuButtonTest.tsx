@@ -102,6 +102,14 @@ const nestedMenuButton: React.FunctionComponent<{}> = () => {
     console.log('submenu item clicked');
   }, []);
 
+  const [showSubmenu, setShowSubmenu] = React.useState(false);
+  const [isSubmenuVisible, setIsSubmenuVisible] = React.useState(false);
+
+  const toggleShowSubmenu = React.useCallback(() => {
+    setShowSubmenu(!showSubmenu);
+    setIsSubmenuVisible(!isSubmenuVisible);
+  }, [showSubmenu, isSubmenuVisible, setShowSubmenu, setIsSubmenuVisible]);
+
   const menuItems = [
     {
       itemKey: '1',
@@ -123,12 +131,14 @@ const nestedMenuButton: React.FunctionComponent<{}> = () => {
       itemKey: '4',
       text: 'SubmenuItem svg icon',
       icon: { svgSource: svgProps, width: 20, height: 20, color: 'red' },
+      onHoverIn: toggleShowSubmenu,
       submenuItems: [
         {
           icon: { svgSource: svgProps, width: 20, height: 20, color: 'red' },
           text: 'SubmenuItem svg icon',
           itemKey: '1',
-          onClick: {onClick}
+          onClick: {onClick},
+
         },
         {
           itemKey: '2',

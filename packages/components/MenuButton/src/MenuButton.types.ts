@@ -6,27 +6,29 @@ import { IconProps } from '@fluentui-react-native/icon';
 export const MenuButtonName = 'MenuButton';
 
 export interface MenuButtonContext {
+  showContextualMenu?: boolean;
+  showSubmenu?: boolean;
   /*
    ** The currently selected MenuButton's key
    */
-  selectedKey: string | null;
+  // selectedKey: string | null;
 
   /*
    ** Updates the clicked menu item and calls the client’s onItemClick callback
    */
-  onItemClick?: (key: string) => void;
+  // onItemClick?: (key: string) => void;
   /*
    ** Parent menu's onDismiss callback that is passed into submenu to call when submenu item is clicked
    */
-  onDismissMenu?: () => void;
+  // onDismissMenu?: () => void;
   /*
    ** Checks if any child menus are open
    */
-  isSubmenuOpen?: boolean;
+  // isSubmenuOpen?: boolean;
   /*
    ** MenuButtonItems will call this submenu dismissal when they are hovered
    */
-  dismissSubmenu?: () => void;
+  // dismissSubmenu?: () => void;
 }
 
 export interface MenuButtonState {
@@ -49,7 +51,9 @@ export interface MenuButtonProps {
 export type MenuButtonSlotProps = {
   root: React.PropsWithChildren<MenuButtonProps>;
   button: IButtonProps;
-  contextualMenu: ContextualMenuProps;
+  contextualMenu: React.PropsWithRef<ContextualMenuProps>;
+  contextualMenuItems: Pick<MenuButtonProps, 'menuItems'>;
+  contextualMenuItem: MenuButtonItemProps;
 };
 
 export type MenuButtonRenderData = IRenderData<MenuButtonSlotProps, MenuButtonState>;
