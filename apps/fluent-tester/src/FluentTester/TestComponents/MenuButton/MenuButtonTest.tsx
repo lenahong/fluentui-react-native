@@ -92,11 +92,20 @@ const nestedMenuButton: React.FunctionComponent<{}> = () => {
     viewBox: '0 0 500 500',
   };
 
+  const [lastMenuItemClicked, setLastMenuItemClicked] = React.useState(null);
+
   const [focusOnMount, setShouldFocusOnMount] = React.useState(true);
   const toggleFocusOnMount = React.useCallback((value) => setShouldFocusOnMount(value), [setShouldFocusOnMount]);
 
   const [focusOnContainer, setShouldFocusOnContainer] = React.useState(false);
   const toggleFocusOnContainer = React.useCallback((value) => setShouldFocusOnContainer(value), [setShouldFocusOnContainer]);
+
+  const onItemClick = React.useCallback(
+    (key) => {
+      setLastMenuItemClicked(key);
+    },
+    [setLastMenuItemClicked],
+  );
 
   const onClick = React.useCallback(() => {
     console.log('submenu item clicked');
@@ -172,7 +181,15 @@ const nestedMenuButton: React.FunctionComponent<{}> = () => {
         <Separator vertical />
 
         <View style={{ flexDirection: 'column', paddingHorizontal: 5 }}>
-          <MenuButton icon={testImage} content="Press for Nested MenuButton" menuItems={menuItems} />
+          <Text>
+            <Text>Last Menu Item Clicked: </Text>
+            {lastMenuItemClicked > 0 ? (
+              <Text style={{ color: 'blue' }}>{lastMenuItemClicked}</Text>
+            ) : (
+              <Text style={{ color: 'blue' }}>none</Text>
+            )}
+          </Text>
+          <MenuButton icon={testImage} content="Press for Nested MenuButton" menuItems={menuItems} onItemClick={onItemClick} />
         </View>
       </View>
     </View>
